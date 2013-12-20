@@ -1,79 +1,38 @@
-function find(t, elt) {
-  if(!t) { return null; }
+var _   = require('./vendor/underscore.js'),
+    JSC = require('./vendor/jscheck.js');
 
-  if(t.item === elt) {
-    return t;
-  } else if (t.item < elt) {
-    return find(t.right, elt);
-  } else {
-    return find(t.left, elt);
+function node(value, left, right) {
+  return { value: value, left: left, right: right };
+}
+
+function insert(t, value) {
+  if(!t) { return node(value); }
+  if(value == t.value) { return t; }
+  if(value < t.value) {
+    return node(t.value, insert(t.left, value), t.right);
   }
+  return node(t.value, t.left, insert(t.right, value));
 }
 
-function min(t) {
-  if(!t.left) { return t.item; }
-  return min(t.left);
+function sorted(t) {
+  var result = [];
+  if(!t) { return result; }
+  return sorted(t.left).concat([t.value]).concat(sorted(t.right));
 }
 
-function max(t) {
-  if(!t.right) { return t.item; }
-  return min(t.right);
+function tree(ar) {
+  return _.reduce(ar, insert, null);
 }
 
-function in_order(t, f) {
-  if(!t) { return; }
+JSC.clear();
+JSC.on_report(console.log);
 
-  in_order(t.left, f);
-  f(t.item);
-  in_order(t.right, f);
-}
+JSC.claim('Sort works and removes duplicates',
+  function (verdict, vals) {
+    var t = tree(vals);
+    return verdict(_.isEqual(sorted(t), _.uniq(_.sortBy(vals, _.identity), true)));
+  },
+  JSC.array(JSC.integer(1, 100), JSC.integer(-10, 10))
+);
 
-function insert(t, elt) {
-  if(!t) { return { item: elt }; }
-  if(elt == t.item) { return t; }
-  if(elt < t.item) {
-    return { item: t.item, left: insert(t.left, elt), right: t.right, parent: t };
-  }
-  return { item: t.item, left: t.left, right: insert(t.right, elt), parent: t };
-}
-
-function leftmost_descendant(t) {
-  if(!t || !t.left) { return t; }
-  return leftmost_descendant(t.left);
-}
-
-function successor(t) {
-  if(t && t.right) {
-    return leftmost_descendant(t.right);
-  }
-  return null;
-}
-
-function replace_node_in_parent(t, t2) {
-  var p = t.parent;
-  if(p) {
-    if(p.left.item == t.item) {
-      p.left = t2;
-    } else {
-      p.right = t2;
-    }
-  }
-  if(t2) {
-    t2.parent = p;
-  }
-}
-
-function remove(t, elt) {
-  var victim = find(t, elt);
-  if(victim.left && victim.right) {
-    var succ    = successor(victim);
-    victim.item = succ.item; // relabel the victim as its successor
-    replace_node_in_parent(succ, null); // remove successor node from tree
-  } else if(victim.left) {
-    replace_node_in_parent(victim, victim.left);
-  } else if(victim.right) {
-    replace_node_in_parent(victim, victim.right);
-  } else {
-    replace_node_in_parent(victim, null);
-  }
-}
+JSC.check();
