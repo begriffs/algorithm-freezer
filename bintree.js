@@ -35,19 +35,6 @@ function findWithParent(t, value, p) {
   }
 }
 
-// function min(t, greaterThan) {
-//   if(!t) {
-//     return t;
-//   }
-//   if(!greaterThan) {
-//     return min(t.left) || t;
-//   }
-//   if(t.value <= greaterThan) {
-//     return min(t.right, greaterThan);
-//   }
-//   return min(t.left, greaterThan) || t;
-// }
-
 function min(t) {
   if(!t || !t.left) {
     return t;
