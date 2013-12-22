@@ -56,14 +56,14 @@ function min(t) {
 }
 
 function successor(t, value) {
-  var result = findWithParent(t, value);
-  if(!result) {
+  if(!t) {
     return null;
   }
-  if(result.right) {
-    return min(result.right);
-  } else {
-    return min(t);
+  if(t.value <= value) {
+    return successor(t.right, value);
+  }
+  if(t.value > value) {
+    return successor(t.left, value) || t;
   }
 }
 
@@ -107,11 +107,11 @@ function tree(ar) {
 }
 
 function bigTrees() {
-  return JSC.array(JSC.integer(1, 100), JSC.integer(-10, 10));
+  return JSC.array(JSC.integer(3, 3), JSC.integer(-10, 10));
 }
 
 JSC.clear();
-JSC.detail(4);
+JSC.detail(2);
 JSC.on_report(console.log);
 
 JSC.claim('Sort works and removes duplicates',
@@ -131,23 +131,27 @@ JSC.claim('Finds things present',
   bigTrees()
 );
 
-// JSC.claim('If a successor exists we can find it',
-//   function (verdict, vals) {
-//     var t   = tree(vals),
-//       value = __.sample(vals),
-//       s     = __.uniq(__.sortBy(vals, __.identity)),
-//       pos   = __.indexOf(s, value, true),
-//       succ  = successor(t, value);
+JSC.claim('If a successor exists we can find it',
+  function (verdict, vals) {
+    var t   = tree(vals),
+      value = __.sample(vals),
+      s     = __.uniq(__.sortBy(vals, __.identity)),
+      pos   = __.indexOf(s, value, true),
+      claim = successor(t, value),
+      truth = null;
 
-//     var v = __.isEqual(
-//         succ && succ.value,
-//         ( pos < 0 ? null : (s[pos+1] || null) )
-//       );
+    if(pos >= 0 && pos+1 < s.length) {
+      truth = s[pos+1];
+    }
 
-//     return verdict(v);
-//   },
-//   bigTrees()
-// );
+    return verdict(__.isEqual(
+        claim && claim.value,
+        truth
+      )
+    );
+  },
+  bigTrees()
+);
 
 JSC.claim('Correctly identifies absent things',
   function (verdict, vals) {
