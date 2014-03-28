@@ -6,11 +6,18 @@ function bigTrees() {
   return jsc.array(jsc.integer(3, 3), jsc.integer(-10, 10));
 }
 
-var impls = _.reduce(fs.readdirSync(__dirname + '/../src/bst'), function (obj, file) {
-  var x = {};
-  x[file.replace('.js', '')] = require('../src/bst/' + file)();
-  return _.extend({}, obj, x);
-}, {});
+var impls = _.reduce(
+  _.filter(
+    fs.readdirSync(__dirname + '/../src/bst'),
+    function (file) { return file.match(/\.js$/); }
+  ),
+  function (obj, file) {
+    var x = {};
+    x[file.replace('.js', '')] = require('../src/bst/' + file)();
+    return _.extend({}, obj, x);
+  },
+  {}
+);
 
 jsc.clear();
 jsc.detail(1);
