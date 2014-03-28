@@ -12,9 +12,9 @@ and we can all learn from your techniques.
 
 1. Pick an algorithm that interests you such as binary search trees.
 1. Copy the submission template in `submissions/bst` and name it
-`submissions/bst/[your-github-name].js`.
+`submissions/bst/[your-github-name].js`
 1. Fill in the empty functions.
 1. Run the tests with `node test/bst.js`
 
 The tests will notice the file you created in the `bst` folder
-put it through the cleansing fire.
+and put it through the cleansing fire.
