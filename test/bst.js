@@ -8,12 +8,12 @@ function bigTrees() {
 
 var impls = _.reduce(
   _.filter(
-    fs.readdirSync(__dirname + '/../src/bst'),
+    fs.readdirSync(__dirname + '/../submissions/bst'),
     function (file) { return file.match(/\.js$/); }
   ),
   function (obj, file) {
     var x = {};
-    x[file.replace('.js', '')] = require('../src/bst/' + file)();
+    x[file.replace('.js', '')] = require('../submissions/bst/' + file)();
     return _.extend({}, obj, x);
   },
   {}
