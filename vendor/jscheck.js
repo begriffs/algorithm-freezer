@@ -757,5 +757,5 @@ var JSC = (function () {
 
 // Expose interface through CommonJS if present
 if (typeof module === 'object') {
-    module.exports = JSC;
+  module.exports = JSC;
 }
