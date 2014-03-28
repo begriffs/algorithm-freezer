@@ -12,7 +12,9 @@ module.exports = function () {
   return self = {
 
     // create a node of the tree
-    node: function (value, left, right) { },
+    node: function (value, left, right) {
+      return { value: value, left: left, right: right };
+    },
 
     // add a value to the tree
     insert: function (t, value) { },
