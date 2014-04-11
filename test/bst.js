@@ -12,7 +12,7 @@ jsc.on_report(console.log);
 
 _.each(load.submissions('bst'), function (impl, author) {
 
-  console.log("*** Testing implementation:", author);
+  console.log("*** Testing BST implementation:", author);
 
   var tree = function (ar) {
     return _.reduce(ar, impl.insert, null);

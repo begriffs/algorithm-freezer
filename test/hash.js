@@ -13,7 +13,7 @@ jsc.on_report(console.log);
 
 _.each(load.submissions('hash'), function (impl, author) {
 
-  console.log("*** Testing implementation:", author);
+  console.log("*** Testing hash implementation:", author);
 
   var dict = function (ar) {
     return _.reduce(ar, impl.insert, null);
