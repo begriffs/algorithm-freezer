@@ -1,29 +1,16 @@
-var _   = require('../vendor/underscore.js')
-  , jsc = require('../vendor/jscheck.js')
-  , fs  = require('fs');
+var _    = require('../vendor/underscore.js')
+  , jsc  = require('../vendor/jscheck.js')
+  , load = require('./helper/load.js');
 
 function bigTrees() {
   return jsc.array(jsc.integer(3, 3), jsc.integer(-10, 10));
 }
 
-var impls = _.reduce(
-  _.filter(
-    fs.readdirSync(__dirname + '/../submissions/bst'),
-    function (file) { return file.match(/\.js$/); }
-  ),
-  function (obj, file) {
-    var x = {};
-    x[file.replace('.js', '')] = require('../submissions/bst/' + file)();
-    return _.extend({}, obj, x);
-  },
-  {}
-);
-
 jsc.clear();
 jsc.detail(1);
 jsc.on_report(console.log);
 
-_.each(impls, function (impl, author) {
+_.each(load.submissions('bst'), function (impl, author) {
 
   console.log("*** Testing implementation:", author);
 
