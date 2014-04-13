@@ -11,7 +11,8 @@ and we can all learn from your techniques.
 
 ### How to submit an answer
 
-1. Pick an algorithm that interests you such as binary search trees.
+1. Pick an algorithm or data structure that interests you such as
+binary search trees.
 1. Copy the submission template in `submissions/bst` and name it
 `submissions/bst/[your-github-name].js`
 1. Fill in the empty functions.
