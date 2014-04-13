@@ -3,7 +3,7 @@ var _    = require('../vendor/underscore.js')
   , load = require('./helper/load.js');
 
 function fuzz() {
-  return jsc.array(jsc.integer(10, 200), jsc.string());
+  return jsc.array(jsc.integer(2, 200), jsc.string());
 }
 
 jsc.on_report(console.log);
@@ -17,7 +17,7 @@ _.each(load.submissions('hash'), function (impl, author) {
   console.log("*** Testing hash implementation:", author);
 
   var dict = function (ar) {
-    return _.reduce(ar, impl.insert, null);
+    return _.reduce(ar, impl.insert, impl.empty());
   };
 
   jsc.claim('Finds things present',

@@ -17,9 +17,11 @@ will exercise various scenarios of empty and full tables.
 module.exports = function () {
   return self = {
 
+    // create an empty hash table
+    empty: function () { },
+
     // Add value to the hash table, and
-    // return the table. If t is null then
-    // create a new table containing the value
+    // return the table.
     //
     // value will be a string
     insert: function (t, value) { },

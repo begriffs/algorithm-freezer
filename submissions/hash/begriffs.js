@@ -11,8 +11,11 @@ module.exports = function () {
 
   return {
 
+    empty: function() {
+      return [];
+    },
+
     insert: function(tbl, val) {
-      tbl = tbl || [];
       var i = hash(val, buckets);
       if(!tbl[i]) {
         tbl[i] = { val: val };
