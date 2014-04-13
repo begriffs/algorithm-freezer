@@ -6,13 +6,14 @@ function fuzz() {
   return jsc.array(jsc.integer(10, 200), jsc.string());
 }
 
-jsc.clear();
-jsc.detail(2);
-jsc.reps(1000); // some hash table problems can happen fairly rarely, so crank it up
 jsc.on_report(console.log);
 
 _.each(load.submissions('hash'), function (impl, author) {
+  jsc.clear();
+  jsc.detail(2);
+  jsc.reps(1000); // some hash table problems can happen fairly rarely, so crank it up
 
+  console.log("**************************************");
   console.log("*** Testing hash implementation:", author);
 
   var dict = function (ar) {
@@ -53,6 +54,5 @@ _.each(load.submissions('hash'), function (impl, author) {
     fuzz()
   );
 
+  jsc.check();
 });
-
-jsc.check();

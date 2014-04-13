@@ -3,16 +3,17 @@ var _    = require('../vendor/underscore.js')
   , load = require('./helper/load.js');
 
 function bigTrees() {
-  return jsc.array(jsc.integer(3, 3), jsc.integer(-10, 10));
+  return jsc.array(jsc.integer(3, 20), jsc.integer(-10, 10));
 }
 
-jsc.clear();
-jsc.detail(1);
 jsc.on_report(console.log);
 
 _.each(load.submissions('bst'), function (impl, author) {
+  jsc.clear();
+  jsc.detail(1);
 
-  console.log("*** Testing BST implementation:", author);
+  console.log("**************************************");
+  console.log("Testing BST implementation:", author);
 
   var tree = function (ar) {
     return _.reduce(ar, impl.insert, null);
@@ -80,6 +81,5 @@ _.each(load.submissions('bst'), function (impl, author) {
     bigTrees()
   );
 
+  jsc.check();
 });
-
-jsc.check();
