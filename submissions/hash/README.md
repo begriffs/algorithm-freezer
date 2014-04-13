@@ -1,9 +1,9 @@
 ## Your challenge
 
-Implement a hash table (using whatever internals you want,
-although separate chaining might be easiest). Fill out these functions
-and save the result to `src/hash/[your-github-name].js`.  Run the
-test to see if you got it right. `node test/hash.js`. Once your
+Implement a hash table (using whatever internals you want, although
+separate chaining might be easiest). Fill out these functions and
+save the result to `submissions/hash/[your-github-name].js`.  Run
+the test to see if you got it right. `node test/hash.js`. Once your
 code passes send a pull request and add your solution to the freezer!
 
 For best test coverage choose a small number of buckets to increase

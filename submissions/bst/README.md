@@ -1,9 +1,9 @@
 ## Your challenge
 
 Implement an unbalanced binary search tree. Fill out these functions
-and save the result to `src/bst/[your-github-name].js`. Run the
-test to see if you got it right. `node test/bst.js`. Once your code
-passes send a pull request and add your solution to the freezer!
+and save the result to `submissions/bst/[your-github-name].js`. Run
+the test to see if you got it right. `node test/bst.js`. Once your
+code passes send a pull request and add your solution to the freezer!
 
 ### BST template
 
