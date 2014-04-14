@@ -1,4 +1,8 @@
 module.exports = function () {
+  function mod(m, n) {
+    return ((m % n) + n) % n;
+  }
+
   return self = {
 
     empty: function(n) {
@@ -6,12 +10,22 @@ module.exports = function () {
     },
 
     hash: function(n, s) {
-      return s.split('').
-        reduce(
+      return mod(
+        s.split('').reduce(
           function(total, chr) {
             return total*31 + chr.charCodeAt(0);
           }, 0
-        ) % n;
+        ), n
+      );
+    },
+
+    roll: function(n, oldHash, w, shiftChar) {
+      return mod(
+        31 * (
+          oldHash - mod(Math.pow(31, w.length-1) * w[0].charCodeAt(0), n)
+        ) + shiftChar.charCodeAt(0)
+      , n
+      );
     },
 
     insert: function(tbl, val) {

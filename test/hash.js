@@ -6,6 +6,10 @@ function fuzz() {
   return jsc.array(jsc.integer(2, 200), jsc.string());
 }
 
+function windowFuzz() {
+  return jsc.array([jsc.string(), jsc.character()]);
+}
+
 jsc.on_report(console.log);
 
 _.each(load.submissions('hash'), function (impl, author) {
@@ -52,6 +56,19 @@ _.each(load.submissions('hash'), function (impl, author) {
       );
     },
     fuzz()
+  );
+
+  jsc.claim('Rolling hash is accurate',
+    function (verdict, vals) {
+      var s = vals[0], c = vals[1], buckets = 10000;
+      var t = s.slice(1).concat(c), h = impl.hash(buckets, s);
+
+      return verdict( _.isEqual(
+        impl.hash(buckets, t),
+        impl.roll(buckets, h, s, c)
+      ));
+    },
+    windowFuzz()
   );
 
   jsc.check();
