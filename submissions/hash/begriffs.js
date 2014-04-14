@@ -1,22 +1,21 @@
 module.exports = function () {
-  function hash(s, n) {
-    return s.split('').
-      reduce(
-        function(total, chr) {
-          return total*31 + chr.charCodeAt(0);
-        }, 0
-      ) % n;
-  }
-  var buckets = 100;
+  return self = {
 
-  return {
+    empty: function(n) {
+      return new Array(n);
+    },
 
-    empty: function() {
-      return [];
+    hash: function(n, s) {
+      return s.split('').
+        reduce(
+          function(total, chr) {
+            return total*31 + chr.charCodeAt(0);
+          }, 0
+        ) % n;
     },
 
     insert: function(tbl, val) {
-      var i = hash(val, buckets);
+      var i = self.hash(tbl.length, val);
       if(!tbl[i]) {
         tbl[i] = { val: val };
       } else {
@@ -33,7 +32,7 @@ module.exports = function () {
     },
 
     find: function(tbl, val) {
-      var i = hash(val, buckets);
+      var i = self.hash(tbl.length, val);
       if(!tbl[i]) { return false; }
 
       var l = tbl[i];
@@ -46,7 +45,7 @@ module.exports = function () {
     },
 
     remove: function(tbl, val) {
-      var i = hash(val, buckets), l = tbl[i], prev = null;
+      var i = self.hash(tbl.length, val), l = tbl[i], prev = null;
 
       while(l) {
         if(l.val === val) {

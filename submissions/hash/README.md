@@ -17,8 +17,13 @@ will exercise various scenarios of empty and full tables.
 module.exports = function () {
   return self = {
 
-    // create an empty hash table
-    empty: function () { },
+    // create an empty hash table with
+    // n buckets
+    empty: function (n) { },
+
+    // hash the string s into a value h
+    // where 0 ≤ h < n
+    hash: function (n, s) { },
 
     // Add value to the hash table, and
     // return the table.

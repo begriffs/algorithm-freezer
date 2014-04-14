@@ -17,7 +17,7 @@ _.each(load.submissions('hash'), function (impl, author) {
   console.log("*** Testing hash implementation:", author);
 
   var dict = function (ar) {
-    return _.reduce(ar, impl.insert, impl.empty());
+    return _.reduce(ar, impl.insert, impl.empty(100));
   };
 
   jsc.claim('Finds things present',
