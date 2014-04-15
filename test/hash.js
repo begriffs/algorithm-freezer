@@ -11,10 +11,13 @@ function windowFuzz() {
 }
 
 jsc.on_report(console.log);
+jsc.on_lost(function(prob) {
+  console.log(prob.exception);
+});
 
 _.each(load.submissions('hash'), function (impl, author) {
   jsc.clear();
-  jsc.detail(2);
+  jsc.detail(1);
   jsc.reps(1000); // some hash table problems can happen fairly rarely, so crank it up
 
   console.log("**************************************");

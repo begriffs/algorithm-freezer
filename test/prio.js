@@ -10,7 +10,7 @@ jsc.on_report(console.log);
 
 _.each(load.submissions('prio'), function (impl, author) {
   jsc.clear();
-  jsc.detail(2);
+  jsc.detail(1);
 
   console.log("**************************************");
   console.log("Testing priority queue implementation:", author);
