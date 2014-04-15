@@ -4,7 +4,7 @@ module.exports = function () {
 
   var hashBuckets = 1000;
 
-  return self = {
+  return {
 
     find: function(needle, haystack) {
       var i
