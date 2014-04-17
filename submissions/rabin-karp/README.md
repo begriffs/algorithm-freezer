@@ -1,3 +1,8 @@
+## Prerequisites
+
+This algorithm requires you to write a rolling hash function first.
+If you haven't yet, create an entry in `submissions/hash`.
+
 ## Your challenge
 
 Use the rolling hash function you created earlier to implement a
