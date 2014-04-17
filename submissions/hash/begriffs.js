@@ -3,6 +3,7 @@ module.exports = function () {
     return ((m % n) + n) % n;
   }
 
+  var self;
   return self = {
 
     empty: function(n) {

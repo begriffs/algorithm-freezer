@@ -24,6 +24,7 @@ function mod(m, n) {
 
 ```js
 module.exports = function () {
+  var self;
   return self = {
 
     // create an empty hash table with

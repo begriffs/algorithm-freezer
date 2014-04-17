@@ -1,4 +1,5 @@
 module.exports = function () {
+  var self;
   return self = {
     node: function (value, left, right) {
       return { value: value, left: left, right: right };

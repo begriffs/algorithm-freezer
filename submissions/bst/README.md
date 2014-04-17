@@ -9,6 +9,7 @@ code passes send a pull request and add your solution to the freezer!
 
 ```js
 module.exports = function () {
+  var self;
   return self = {
 
     // create a node of the tree
