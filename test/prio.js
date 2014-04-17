@@ -15,14 +15,9 @@ _.each(load.submissions('prio'), function (impl, author) {
   console.log("**************************************");
   console.log("Testing priority queue implementation:", author);
 
-  var queue = function (ar) {
-    return _.reduce(ar, impl.insert, impl.empty());
-  };
-
   jsc.claim('Finds minimum after creation',
     function (verdict, vals) {
-      debugger;
-      var q = queue(vals)
+      var q = impl.fromArray(vals)
         , min = _.min(vals);
       return verdict( _.isEqual(impl.min(q), min) );
     },
@@ -31,7 +26,7 @@ _.each(load.submissions('prio'), function (impl, author) {
 
   jsc.claim('Removing all but one leaves the max behind',
     function (verdict, vals) {
-      var q = queue(vals)
+      var q = impl.fromArray(vals)
         , max = _.max(vals);
       for(var i = 0; i < vals.length - 1; i++) {
         q = impl.remove_min(q);

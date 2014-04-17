@@ -1,28 +1,30 @@
 module.exports = function () {
-  return {
 
-    empty: function () {
-      return { items: [], min: 0 };
+  var self;
+  return self = {
+
+    fromArray: function (ar) {
+      return ar.reduce(self.insert, { items: [], minElt: 0 });
     },
 
     insert: function (q, val) {
       return {
-        min: val < q.items[q.min] ? q.items.length : q.min,
+        minElt: val < q.items[q.minElt] ? q.items.length : q.minElt,
         items: q.items.concat([val])
       };
     },
 
     min: function (q) {
-      return q.items.length > 0 ? q.items[q.min] : Infinity;
+      return q.items.length > 0 ? q.items[q.minElt] : Infinity;
     },
 
     remove_min: function (q) {
       if(q.items.length < 1) { return q; }
-      q.items = q.items.slice(0, q.min).concat(q.items.slice(q.min+1));
-      q.min   = 0;
+      q.items  = q.items.slice(0, q.minElt).concat(q.items.slice(q.minElt+1));
+      q.minElt = 0;
       for(var i = 0; i < q.items.length; i++) {
-        if(q.items[i] < q.items[q.min]) {
-          q.min = i;
+        if(q.items[i] < q.items[q.minElt]) {
+          q.minElt = i;
         }
       }
       return q;

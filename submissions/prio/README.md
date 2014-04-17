@@ -9,10 +9,11 @@ passes send a pull request and add your solution to the freezer!
 
 ```js
 module.exports = function () {
+  var self;
   return self = {
 
-    // create an empty queue
-    empty: function () { },
+    // queue up the array elements
+    fromArray: function (ar) { },
 
     // add a value to the queue
     insert: function (q, value) { },

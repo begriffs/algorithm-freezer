@@ -1,8 +1,11 @@
 module.exports = function () {
-  return {
 
-    empty: function () {
-      return [];
+  var self;
+  return self = {
+
+    fromArray: function (ar) {
+      debugger;
+      return ar.reduce(self.insert, []);
     },
 
     insert: function (q, val) {
