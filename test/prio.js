@@ -15,7 +15,7 @@ _.each(load.submissions('prio'), function (impl, author) {
   console.log("**************************************");
   console.log("Testing priority queue implementation:", author);
 
-  jsc.claim('Finds minimum after creation',
+  jsc.claim('Finds minimum from creation',
     function (verdict, vals) {
       var q = impl.fromArray(vals)
         , min = _.min(vals);
@@ -35,6 +35,16 @@ _.each(load.submissions('prio'), function (impl, author) {
         impl.min(q),
         vals.length > 0 ? max : Infinity
       ));
+    },
+    fuzz()
+  );
+
+
+  jsc.claim('Finds minimum inserted after creation',
+    function (verdict, vals) {
+      var q = impl.fromArray(vals);
+      q = impl.insert(q, -100);
+      return verdict( _.isEqual(impl.min(q), -100) );
     },
     fuzz()
   );
