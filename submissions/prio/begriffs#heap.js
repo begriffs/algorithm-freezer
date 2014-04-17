@@ -48,6 +48,10 @@ module.exports = function () {
       return q;
     },
 
+    isEmpty: function (q) {
+      return q.length < 2;
+    },
+
     insert: function (q, value) {
       q.push(value);
       return bubbleUp(q, q.length - 1);
@@ -55,14 +59,19 @@ module.exports = function () {
 
     min: function (q) {
       // zeroeth element is unused for arithmetic convenience
-      return q.length < 2 ? Infinity : q[1];
+      return self.isEmpty(q) ? Infinity : q[1];
     },
 
     remove_min: function (q) {
-      if(q.length < 2) { return q; }
+      if(self.isEmpty(q)) { return q; }
 
-      q[1] = q.pop();
-      return bubbleDown(q, 1);
+      var last = q.pop();
+      if(!self.isEmpty(q)) {
+        q[1] = last;
+        return bubbleDown(q, 1);
+      } else {
+        return q;
+      }
     }
 
   };

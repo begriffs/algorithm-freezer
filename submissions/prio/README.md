@@ -25,6 +25,9 @@ module.exports = function () {
     // queue up the array elements
     fromArray: function (ar) { },
 
+    // boolean
+    isEmpty: function (q) { },
+
     // add a value to the queue
     insert: function (q, value) { },
 

@@ -4,8 +4,11 @@ module.exports = function () {
   return self = {
 
     fromArray: function (ar) {
-      debugger;
       return ar.reduce(self.insert, []);
+    },
+
+    isEmpty: function (q) {
+      return q.length === 0;
     },
 
     insert: function (q, val) {

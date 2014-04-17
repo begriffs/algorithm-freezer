@@ -39,6 +39,16 @@ _.each(load.submissions('prio'), function (impl, author) {
     fuzz()
   );
 
+  jsc.claim('It is possible to completely empty the queue',
+    function (verdict, vals) {
+      var q = impl.fromArray(vals)
+      for(var i = 0; i < vals.length; i++) {
+        q = impl.remove_min(q);
+      }
+      return verdict( impl.isEmpty(q) );
+    },
+    fuzz()
+  );
 
   jsc.claim('Finds minimum inserted after creation',
     function (verdict, vals) {

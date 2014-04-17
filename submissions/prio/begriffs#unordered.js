@@ -7,6 +7,10 @@ module.exports = function () {
       return ar.reduce(self.insert, { items: [], minElt: 0 });
     },
 
+    isEmpty: function (q) {
+      return q.items.length === 0;
+    },
+
     insert: function (q, val) {
       return {
         minElt: val < q.items[q.minElt] ? q.items.length : q.minElt,
@@ -15,11 +19,15 @@ module.exports = function () {
     },
 
     min: function (q) {
-      return q.items.length > 0 ? q.items[q.minElt] : Infinity;
+      return self.isEmpty(q) ? Infinity : q.items[q.minElt];
     },
 
     remove_min: function (q) {
-      if(q.items.length < 1) { return q; }
+      if(q.items.length < 2) {
+        q.items.pop();
+        return q;
+      }
+
       q.items  = q.items.slice(0, q.minElt).concat(q.items.slice(q.minElt+1));
       q.minElt = 0;
       for(var i = 0; i < q.items.length; i++) {
