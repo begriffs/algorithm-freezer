@@ -18,7 +18,6 @@ _.each(load.submissions('quicksort'), function (impl, author) {
 
   jsc.claim('it sorts',
     function (verdict, vals) {
-      //console.log(vals, impl.sort(vals));
       return verdict(_.isEqual(impl.sort(vals), _.sortBy(vals, _.identity)));
     },
     arrays()
