@@ -21,6 +21,8 @@ module.exports = function () {
   return {
 
     // both arguments are strings
+    //
+    // return index of match or -1 if not found
     find: function(needle, haystack) { }
 
   };
