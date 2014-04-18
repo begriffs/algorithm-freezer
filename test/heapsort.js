@@ -3,7 +3,7 @@ var _    = require('../vendor/underscore.js')
   , load = require('./helper/load.js');
 
 function arrays() {
-  return jsc.array(jsc.integer(3, 20), jsc.integer(-10, 10));
+  return jsc.array(jsc.integer(0, 20), jsc.integer(-10, 10));
 }
 
 jsc.on_report(console.log);
