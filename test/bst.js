@@ -81,5 +81,25 @@ _.each(load.submissions('bst'), function (impl, author) {
     bigTrees()
   );
 
+  jsc.claim('Remove returns tree on success',
+    function (verdict, vals) {
+      var t = tree(vals),
+        s = impl.sorted(t),
+        x = _.sample(s);
+      verdict(impl.remove(t, x) === t);
+    },
+    bigTrees()
+  );
+
+  jsc.claim('Remove returns null when elt not found',
+    function (verdict, vals) {
+      var t = tree(vals),
+        s = impl.sorted(t),
+        m = _.max(s) + 1;
+      verdict(impl.remove(t, m) === null);
+    },
+    bigTrees()
+  );
+
   jsc.check();
 });

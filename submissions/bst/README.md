@@ -35,6 +35,8 @@ module.exports = function () {
     successor: function (t, value) { },
 
     // remove node containing value
+    //
+    // return t, or null if value not found
     remove: function (t, value) { }
 
   };

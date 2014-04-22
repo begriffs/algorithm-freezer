@@ -56,6 +56,7 @@ module.exports = function () {
 
     remove: function (t, value) {
       var doomed = self.find(t, value), replacement = null;
+      if(!doomed) { return null; }
 
       if(doomed.left && doomed.right) {
         var next = self.min(doomed.right).value;
@@ -80,7 +81,7 @@ module.exports = function () {
             doomed.left = replacement.left;
             doomed.right = replacement.right;
           } else {
-            return null;
+            return t;
           }
         }
       }
