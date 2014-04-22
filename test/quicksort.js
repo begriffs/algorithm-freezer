@@ -3,11 +3,10 @@ var _    = require('../vendor/underscore.js')
   , load = require('./helper/load.js');
 
 function arrays() {
-  return jsc.array(jsc.integer(0, 10), jsc.integer(-10, 10));
+  return jsc.array(jsc.integer(0, 20), jsc.integer(-10, 10));
 }
 
 jsc.on_report(console.log);
-jsc.on_lost(function(x) {console.log(x.exception)});
 
 _.each(load.submissions('quicksort'), function (impl, author) {
   jsc.clear();
