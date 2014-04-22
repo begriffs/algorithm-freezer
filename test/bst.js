@@ -101,5 +101,13 @@ _.each(load.submissions('bst'), function (impl, author) {
     bigTrees()
   );
 
+  jsc.claim('Remove returns null when tree becomes empty',
+    function (verdict, single) {
+      var t = tree([single]);
+      verdict(impl.remove(t, single) === null);
+    },
+    jsc.integer(-10, 10)
+  );
+
   jsc.check();
 });

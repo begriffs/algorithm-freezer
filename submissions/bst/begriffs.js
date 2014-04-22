@@ -81,7 +81,7 @@ module.exports = function () {
             doomed.left = replacement.left;
             doomed.right = replacement.right;
           } else {
-            return t;
+            return null;
           }
         }
       }
