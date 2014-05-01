@@ -1,6 +1,6 @@
-## algorithm-freezer
-[![Build Status](https://travis-ci.org/begriffs/algorithm-freezer.png?branch=master)](https://travis-ci.org/begriffs/algorithm-freezer)
+<img src="img/logo.png" alt="logo" align="left" />
 
+[![Build Status](https://travis-ci.org/begriffs/algorithm-freezer.png?branch=master)](https://travis-ci.org/begriffs/algorithm-freezer)
 Fill in the blanks and submit implementations for basic algorithms
 in javascript.  Your implementation will be pummeled by randomized
 data structures and property-based tests to see if you overlooked
