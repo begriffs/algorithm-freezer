@@ -20,3 +20,16 @@ binary search trees.
 
 The tests will notice the file you created in the `bst` folder
 and put it through the cleansing fire.
+
+### Algorithms so far
+
+* [Binary search trees](submissions/bst)
+* [Hash tables](submissions/hash)
+  * [Rabin-Karp substring search](submissions/rabin-karp)
+* [Heaps and Priority Queues](submissions/prio)
+* Sorts
+  * [Merge sort](submissions/mergesort)
+  * [Heap sort](submissions/heapsort)
+  * [Quick sort](submissions/quicksort)
+* Graph
+  * (in progress) BFS, DFS, shortest path etc
