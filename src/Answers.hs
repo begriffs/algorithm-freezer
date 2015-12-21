@@ -1,12 +1,15 @@
 module Answers where
 
+import Types
+
 import Data.Maybe
 import qualified Data.Set as S
 import qualified Data.Map as M
+import qualified Data.HashSet as H
 
 {- | Find most frequently ocurring elts in list
 
-Clarifying questions to ask
+Clarifying questions
   - What if no elts in list?
   - What if there's a tie in frequency?
 
@@ -43,3 +46,32 @@ mostFreq xs =
       M.insert k (old + 1) m
     ) M.empty
 
+{- | Find pairs of integers in a list which add to n.
+
+Clarifying assumptions
+  - No duplicate pairs allowed
+  - Output canonical pairs, i.e. (a,b) for a <= b
+
+Strategy notes:
+  - Populate a hash set of values present in the array
+  - Traverse each and search for its additive complement
+  - If found add unordered pair to result set
+
+Naive quadratic implementation with ordered pairs
+  \ns -> [(a,b) | a <- ns, b <- ns, a+b==n]
+
+Time complexity: for arbitrary list length but bounded W
+  H.fromList: n*min(10, W) ~ n (for small W)
+  H.member: min(10, W) ~ 1
+  H.insert: min(10, W) ~ 1
+  = n + n*(1 + 1 + 1) ~ n
+-}
+adders :: Int -> [Int] -> H.HashSet (UnorderedPair Int)
+adders n is =
+  let values = H.fromList is in
+  foldr
+    (\i result ->
+      if H.member (n-i) values
+         then H.insert (makeUnordered (i, n-i)) result
+         else result
+    ) H.empty values
