@@ -1,8 +1,11 @@
 import Test.Hspec
+import Test.QuickCheck
 
 import qualified Data.Set as S
 import qualified Data.HashSet as H
 import qualified Data.Vector as V
+import Data.List (sort)
+import Data.Maybe (fromJust)
 
 import Answers
 import Types
@@ -76,3 +79,16 @@ main = hspec $ do
       sortedSearch 2 (V.fromList [0,1]) `shouldBe` Nothing
     it "Fails to find value smaller than all entries" $
       sortedSearch 0 (V.fromList [1,2]) `shouldBe` Nothing
+
+    -- TODO: better constrain Arbitrary instances of l and i
+    describe "Properties" $ do
+      it "what goes in must come out" $ property $ \l i ->
+        if null l
+           then True
+           else do
+             let sorted = V.fromList $ sort (l::[Int])
+                 item = sorted V.! (i `mod` V.length sorted)
+                 found = sortedSearch item sorted
+             case found of
+               Nothing  -> False
+               Just idx -> item == sorted V.! idx
