@@ -121,3 +121,17 @@ Complexity:
 -}
 loners :: Ord a => [a] -> S.Set a
 loners = M.keysSet . M.filter (==1) . occurrenceGroups
+
+{- | Find the common elements of two lists
+
+Strategy
+  - The standard library implementation dodges the question
+  - I'll do it properly when writing the data structures by hand
+
+Complexity:
+  S.fromList: n log n
+  S.intersection: m+n
+  = n log n + m + n + m log m ~ n log n (for n similar to m)
+-}
+commonElts :: Ord a => [a] -> [a] -> S.Set a
+commonElts a b = (S.fromList a) `S.intersection` (S.fromList b)

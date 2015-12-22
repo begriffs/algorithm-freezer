@@ -51,3 +51,9 @@ main = hspec $ do
       loners [0,1,1] `shouldBe` S.singleton 0
     it "Identifies two loners" $
       loners [0,1,1,2] `shouldBe` S.fromList [0,2]
+
+  describe "Finding elements in common" $ do
+    it "There are none for disjoint lists" $
+      commonElts [0] [1] `shouldBe` S.empty
+    it "Works as advertised" $
+      commonElts [0,1,2] [1,2,3] `shouldBe` S.fromList [1,2]
