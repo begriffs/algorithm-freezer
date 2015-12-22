@@ -7,6 +7,7 @@ import qualified Data.Set as S
 import qualified Data.Map as M
 import qualified Data.HashSet as H
 import qualified Data.Algorithms.KMP as KMP
+import qualified Data.Vector as V
 
 {- | Find most frequently occuring elts in list
 
@@ -135,3 +136,27 @@ Complexity:
 -}
 commonElts :: Ord a => [a] -> [a] -> S.Set a
 commonElts a b = (S.fromList a) `S.intersection` (S.fromList b)
+
+{- | Binary search in a sorted array
+
+Assumption
+  - Input sorted in ascending order
+
+Strategy
+  - Divide and conquer with indices
+
+Complexity
+  log n
+-}
+sortedSearch :: Ord a => a -> V.Vector a -> Maybe Int
+sortedSearch a ar =
+  inRange 0 (V.length ar - 1)
+ where
+  inRange lo hi
+    | lo > hi = Nothing
+    | a < guess = inRange lo (mid-1)
+    | a > guess = inRange (mid+1) hi
+    | otherwise = Just mid
+    where
+      mid = (hi+lo) `div` 2
+      guess = ar V.! mid

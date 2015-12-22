@@ -2,6 +2,7 @@ import Test.Hspec
 
 import qualified Data.Set as S
 import qualified Data.HashSet as H
+import qualified Data.Vector as V
 
 import Answers
 import Types
@@ -57,3 +58,21 @@ main = hspec $ do
       commonElts [0] [1] `shouldBe` S.empty
     it "Works as advertised" $
       commonElts [0,1,2] [1,2,3] `shouldBe` S.fromList [1,2]
+
+  describe "Binary search on sorted array" $ do
+    it "Finds nothing in an empty list" $
+      sortedSearch 0 V.empty `shouldBe` Nothing
+    it "Finds a value in a singleton list" $
+      sortedSearch 0 (V.singleton 0) `shouldBe` Just 0
+    it "Finds nothing in a bad singleton list" $
+      sortedSearch 0 (V.singleton 1) `shouldBe` Nothing
+    it "Finds a value on the extreme left" $
+      sortedSearch 0 (V.fromList [0,1]) `shouldBe` Just 0
+    it "Finds a value on the extreme right" $
+      sortedSearch 1 (V.fromList [0,1]) `shouldBe` Just 1
+    it "Finds middle index in a repeated list" $
+      sortedSearch 0 (V.fromList [0,0,0]) `shouldBe` Just 1
+    it "Fails to find value larger than all entries" $
+      sortedSearch 2 (V.fromList [0,1]) `shouldBe` Nothing
+    it "Fails to find value smaller than all entries" $
+      sortedSearch 0 (V.fromList [1,2]) `shouldBe` Nothing
