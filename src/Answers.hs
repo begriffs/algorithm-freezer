@@ -42,10 +42,7 @@ mostFreq xs =
  where
   countGroups :: Ord a => [a] -> M.Map a Int
   countGroups = foldr
-    (\k m ->
-      let old = (fromMaybe 0 $ M.lookup k m) in
-      M.insert k (old + 1) m
-    ) M.empty
+    (\k m -> M.insertWith (+) k 1 m) M.empty
 
 {- | Find pairs of integers in a list which add to n.
 
