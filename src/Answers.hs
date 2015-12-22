@@ -8,7 +8,7 @@ import qualified Data.Map as M
 import qualified Data.HashSet as H
 import qualified Data.Algorithms.KMP as KMP
 
-{- | Find most frequently ocurring elts in list
+{- | Find most frequently occuring elts in list
 
 Clarifying questions
   - What if no elts in list?
@@ -24,10 +24,7 @@ Strategy notes:
   - Return keys as result set
 
 Time complexity:
-  countGroups: n
-    lookup: log n
-    insert: log n
-    = n * (2 log n) ~ n log n
+  occurrenceGroups: n log n
   maxFrequency: n
   filter: n
   keysSet: n
@@ -35,14 +32,19 @@ Time complexity:
 -}
 mostFreq :: Ord a => [a] -> S.Set a
 mostFreq xs =
-  let grouped = countGroups xs
+  let grouped = occurrenceGroups xs
       maxFrequency = M.foldr max 0 grouped in
   M.keysSet $
     M.filter (==maxFrequency) grouped
- where
-  countGroups :: Ord a => [a] -> M.Map a Int
-  countGroups = foldr
-    (\k m -> M.insertWith (+) k 1 m) M.empty
+
+{- | Helper for array frequency questions
+
+Complexity: n log n
+  insertWith: log n
+-}
+occurrenceGroups :: Ord a => [a] -> M.Map a Int
+occurrenceGroups = foldr
+  (\k m -> M.insertWith (+) k 1 m) M.empty
 
 {- | Find pairs of integers in a list which add to n.
 
@@ -95,3 +97,27 @@ Time complexity:
 cycleEq :: Eq a => [a] -> [a] -> Bool
 cycleEq a b = length a == length b &&
   (not . null $ KMP.match (KMP.build a) (b++b))
+
+{- | Find the only element in an array which occurs only once.
+
+Clarifying questions
+  - What if there is none? More than one?
+
+I am choosing to model the result as a set of the
+the item(s) which occur exactly once.
+
+Strategy notes:
+  - Similar to finding the most frequent item
+  - Build map from items to their frequency
+  - Filter map for keys with one occurrence
+  - Return keys as result set
+
+Complexity:
+  occurrenceGroups: n log n
+  maxFrequency: n
+  filter: n
+  keysSet: n
+  = n log n + 2n ~ n log n
+-}
+loners :: Ord a => [a] -> S.Set a
+loners = M.keysSet . M.filter (==1) . occurrenceGroups

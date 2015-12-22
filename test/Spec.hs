@@ -41,3 +41,13 @@ main = hspec $ do
       cycleEq [1,1,1,1,2] [1,1,1,2,1] `shouldBe` True
     it "false for a strict sublist" $
       cycleEq [1] [1,1] `shouldBe` False
+
+  describe "Items which occur only once in array" $ do
+    it "Finds none in empty list" $
+      loners ([]::[Int]) `shouldBe` S.empty
+    it "Finds none when all are duped" $
+      loners [0,0] `shouldBe` S.empty
+    it "Identifies a single loner" $
+      loners [0,1,1] `shouldBe` S.singleton 0
+    it "Identifies two loners" $
+      loners [0,1,1,2] `shouldBe` S.fromList [0,2]
