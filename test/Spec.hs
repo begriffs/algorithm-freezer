@@ -64,21 +64,21 @@ main = hspec $ do
 
   describe "Binary search on sorted array" $ do
     it "Finds nothing in an empty list" $
-      sortedSearch 0 V.empty `shouldBe` Nothing
+      searchSorted 0 V.empty `shouldBe` Nothing
     it "Finds a value in a singleton list" $
-      sortedSearch 0 (V.singleton 0) `shouldBe` Just 0
+      searchSorted 0 (V.singleton 0) `shouldBe` Just 0
     it "Finds nothing in a bad singleton list" $
-      sortedSearch 0 (V.singleton 1) `shouldBe` Nothing
+      searchSorted 0 (V.singleton 1) `shouldBe` Nothing
     it "Finds a value on the extreme left" $
-      sortedSearch 0 (V.fromList [0,1]) `shouldBe` Just 0
+      searchSorted 0 (V.fromList [0,1]) `shouldBe` Just 0
     it "Finds a value on the extreme right" $
-      sortedSearch 1 (V.fromList [0,1]) `shouldBe` Just 1
+      searchSorted 1 (V.fromList [0,1]) `shouldBe` Just 1
     it "Finds middle index in a repeated list" $
-      sortedSearch 0 (V.fromList [0,0,0]) `shouldBe` Just 1
+      searchSorted 0 (V.fromList [0,0,0]) `shouldBe` Just 1
     it "Fails to find value larger than all entries" $
-      sortedSearch 2 (V.fromList [0,1]) `shouldBe` Nothing
+      searchSorted 2 (V.fromList [0,1]) `shouldBe` Nothing
     it "Fails to find value smaller than all entries" $
-      sortedSearch 0 (V.fromList [1,2]) `shouldBe` Nothing
+      searchSorted 0 (V.fromList [1,2]) `shouldBe` Nothing
 
     -- TODO: better constrain Arbitrary instances of l and i
     describe "Properties" $ do
@@ -88,7 +88,36 @@ main = hspec $ do
            else do
              let sorted = V.fromList $ sort (l::[Int])
                  item = sorted V.! (i `mod` V.length sorted)
-                 found = sortedSearch item sorted
+                 found = searchSorted item sorted
              case found of
                Nothing  -> False
                Just idx -> item == sorted V.! idx
+
+  describe "Binary search on rotated array" $ do
+    it "Finds nothing in an empty list" $
+      searchRotated 0 V.empty `shouldBe` Nothing
+    it "Finds a value in a singleton list" $
+      searchRotated 0 (V.singleton 0) `shouldBe` Just 0
+    it "Finds nothing in a bad singleton list" $
+      searchRotated 0 (V.singleton 1) `shouldBe` Nothing
+    it "Fails to find value larger than all entries" $
+      searchRotated 100 (V.fromList [2,0,1]) `shouldBe` Nothing
+    it "Fails to find value smaller than all entries" $
+      searchRotated (-100) (V.fromList [2,0,1]) `shouldBe` Nothing
+
+    describe "Properties" $ do
+      let rotate i = (\(a,b) -> b V.++ a) . V.splitAt i
+
+      it "what goes in must come out" $ property $ \l i rot ->
+        if null l
+           then True
+           else do
+             let sorted = V.fromList . sort $ (l::[Int])
+                 len = V.length sorted
+                 (i', rot') = (i `mod` len, (rot::Int) `mod` len)
+                 rotated = rotate rot' sorted
+                 item = rotated V.! i'
+                 found = searchRotated item rotated
+             case found of
+               Nothing  -> False
+               Just idx -> item == rotated V.! idx

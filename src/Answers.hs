@@ -135,7 +135,7 @@ Complexity:
   = n log n + m + n + m log m ~ n log n (for n similar to m)
 -}
 commonElts :: Ord a => [a] -> [a] -> S.Set a
-commonElts a b = (S.fromList a) `S.intersection` (S.fromList b)
+commonElts a b = S.fromList a `S.intersection` S.fromList b
 
 {- | Binary search in a sorted array
 
@@ -148,15 +148,50 @@ Strategy
 Complexity
   log n
 -}
-sortedSearch :: Ord a => a -> V.Vector a -> Maybe Int
-sortedSearch a ar =
+searchSorted :: Ord a => a -> V.Vector a -> Maybe Int
+searchSorted a ar =
   inRange 0 (V.length ar - 1)
  where
   inRange lo hi
     | lo > hi = Nothing
-    | a < guess = inRange lo (mid-1)
+    | a == guess = Just mid
     | a > guess = inRange (mid+1) hi
-    | otherwise = Just mid
+    | a < guess = inRange lo (mid-1)
     where
       mid = (hi+lo) `div` 2
       guess = ar V.! mid
+
+{- | Binary search in a sorted-then-rotated array
+
+Assumption
+  - Input was sorted in ascending order then rotated
+
+Strategy
+  - Generalization of binary search since sorted list is trivial rotation
+  - At any pivot either the left or the right side is sorted (proof?)
+  - If the left (right) is sorted and needle lies in its bounds then if the
+    needle exists at all it must be on that side
+  - Else if the needle exists it must be in the other side
+
+Complexity
+  log n
+-}
+searchRotated :: Ord a => a -> V.Vector a -> Maybe Int
+searchRotated a ar =
+  inRange 0 (V.length ar - 1)
+ where
+  inRange lo hi
+    | lo > hi = Nothing
+    | a == mdval = Just mid
+    | losorted && loval <= a && a < mdval = inRange lo (mid-1)
+    | hisorted && mdval < a && a <= hival = inRange (mid+1) hi
+    | not losorted = inRange lo (mid-1)
+    | not hisorted = inRange (mid+1) hi
+    | otherwise = Nothing  --both sides sorted but elt not there
+    where
+      mid = (hi+lo) `div` 2
+      loval = ar V.! lo
+      mdval = ar V.! mid
+      hival = ar V.! hi
+      losorted = loval <= mdval
+      hisorted = mdval < hival
