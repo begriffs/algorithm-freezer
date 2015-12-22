@@ -68,14 +68,13 @@ Time complexity: for arbitrary list length but bounded W
   = n + n*(1 + 1 + 1) ~ n
 -}
 adders :: Int -> [Int] -> H.HashSet (UnorderedPair Int)
-adders n is =
-  let values = H.fromList is in
-  foldr
-    (\i result ->
-      if H.member (n-i) values
-         then H.insert (makeUnordered (i, n-i)) result
-         else result
-    ) H.empty values
+adders n is = foldr
+  (\i result ->
+    if H.member (n-i) values
+       then H.insert (makeUnordered (i, n-i)) result
+       else result
+  ) H.empty values
+ where values = H.fromList is
 
 {- | Are two lists rotations of one another?
 
