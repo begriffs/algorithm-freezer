@@ -6,6 +6,7 @@ import Data.Maybe
 import qualified Data.Set as S
 import qualified Data.Map as M
 import qualified Data.HashSet as H
+import qualified Data.Algorithms.KMP as KMP
 
 {- | Find most frequently ocurring elts in list
 
@@ -75,3 +76,26 @@ adders n is =
          then H.insert (makeUnordered (i, n-i)) result
          else result
     ) H.empty values
+
+{- | Are two lists rotations of one another?
+
+Strategy notes:
+  - The idea is to do a sublist search with modular arithmetic
+  - Avoid modular arithmetic by self-concatenating one of the strings
+  - Then use a standard substring search
+
+Naive quadratic implementation
+  \u v -> any (u==) [ rotate i v | i <- [0..V.length v - 1] ]
+    where
+      rotate i = (\(a,b) -> b V.++ a) . V.splitAt i
+
+Time complexity:
+  length: n
+  KMP.build: n
+  KMP.match n+m
+  (++): n+m
+  = n + n + 2n + n + 2n + n ~ n
+-}
+cycleEq :: Eq a => [a] -> [a] -> Bool
+cycleEq a b = length a == length b &&
+  (not . null $ KMP.match (KMP.build a) (b++b))

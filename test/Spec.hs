@@ -31,3 +31,13 @@ main = hspec $ do
     it "Finds all pairs" $
       tenners [0,1,2,3,4,5,6,7,8,9] `shouldBe` H.fromList
         (map makeUnordered [(1,9), (2,8), (3,7), (4,6), (5,5)])
+
+  describe "Detecting when one list is a rotation of another" $ do
+    it "false for unequal lengths" $
+      cycleEq [0,1] [] `shouldBe` False
+    it "true for a typical example" $
+      cycleEq [1,2,3,5,6,7,8] [5,6,7,8,1,2,3] `shouldBe` True
+    it "true for lists with repeating elements" $
+      cycleEq [1,1,1,1,2] [1,1,1,2,1] `shouldBe` True
+    it "false for a strict sublist" $
+      cycleEq [1] [1,1] `shouldBe` False
