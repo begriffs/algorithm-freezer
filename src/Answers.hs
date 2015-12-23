@@ -234,3 +234,18 @@ primes :: [Int]
 primes = removeHeadMultiples [2..]
  where
   removeHeadMultiples (p:xs) = p : removeHeadMultiples [x | x <- xs, x `rem` p > 0]
+
+{- | Find n-ary representation of an int.
+
+Complexity:
+  decompose: log n
+  reverse: n
+  = 2 log n ~ log n
+-}
+naryRepresentation :: Integer -> Integer -> [Integer]
+naryRepresentation base i =
+  reverse $ decompose i
+ where
+  decompose i
+    | i < base = [i `rem` base]
+    | otherwise = (i `rem` base) : decompose (i `div` base)
