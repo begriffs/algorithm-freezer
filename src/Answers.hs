@@ -195,3 +195,42 @@ searchRotated a ar =
       hival = ar V.! hi
       losorted = loval <= mdval
       hisorted = mdval < hival
+
+{- | Find primes less than n
+
+Could this solution be considered "dynamic programming?" Does
+the lazy evaluation constitute a lookup table?
+
+Strategy:
+  - Use lazy evaluation to sieve a list as you go
+  - [2,3,4,5,6,7,8,9,10...]
+  - Yield 2 unconditionally
+  - Now scan the list for a non-multiple of 2. Finds 3.
+  - Scan the new list for a non-multiple of 3.
+    Scanning the list causes it to be computed, and already omits 4.
+    Finds 5.
+
+Complexity
+  - No idea. There are rougly n / log n primes smaller than n,
+    and continuing to traverse a more deeply sieved list layers on
+    divisibility checks, it has to be worse than linear time.
+-}
+primesTo :: Int -> [Int]
+primesTo n = removeHeadMultiples [2..n]
+ where
+  removeHeadMultiples same@(p:xs)
+    | p*p > n   = same -- short circuit factors greater than sqrt(n)
+    | otherwise = p : removeHeadMultiples [x | x <- xs, x `rem` p > 0]
+
+{- | List of all primes, take the first n items as desired
+
+Like primesTo but less efficient because it ends up sieving the
+lists for terms which fall outside the chosen range.
+
+It's more efficient use (take n) . primesTo . (\n -> n * (logBase 2 n))
+although not guaranteed to produce exactly n results.
+-}
+primes :: [Int]
+primes = removeHeadMultiples [2..]
+ where
+  removeHeadMultiples (p:xs) = p : removeHeadMultiples [x | x <- xs, x `rem` p > 0]
