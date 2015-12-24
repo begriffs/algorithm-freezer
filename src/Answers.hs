@@ -2,6 +2,7 @@ module Answers where
 
 import Types
 
+import Data.Char (digitToInt)
 import Data.Maybe
 import qualified Data.Set as S
 import qualified Data.Map as M
@@ -237,15 +238,39 @@ primes = removeHeadMultiples [2..]
 
 {- | Find n-ary representation of an int.
 
+Clarifying questions
+  - Should it handle negative numbers too?
+
 Complexity:
   decompose: log n
   reverse: n
   = 2 log n ~ log n
 -}
-naryRepresentation :: Integer -> Integer -> [Integer]
+naryRepresentation :: Int -> Int -> [Int]
 naryRepresentation base i =
   reverse $ decompose i
  where
   decompose i
+    | i < 0 = error "Cannot handle negative numbers"
     | i < base = [i `rem` base]
     | otherwise = (i `rem` base) : decompose (i `div` base)
+
+{- | Turn string of numerals into an integer
+
+Clarifying questions
+  - Should it handle negative numbers too?
+
+Complexity:
+  zipWith: n
+  reverse: n
+  map: n
+    digitToInt: 1
+    = n
+  = 3n ~ n
+-}
+parseInt :: String -> Int
+parseInt ('-':str) = -1 * parseInt str
+parseInt str =
+  sum . zipWith (*) [10^i | i <- [0..]]
+    . reverse
+    $ map digitToInt str

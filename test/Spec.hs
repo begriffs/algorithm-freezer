@@ -4,6 +4,7 @@ import Test.QuickCheck
 import qualified Data.Set as S
 import qualified Data.HashSet as H
 import qualified Data.Vector as V
+import Data.Char (intToDigit)
 import Data.List (sort)
 import Data.Maybe (fromJust)
 
@@ -81,17 +82,15 @@ main = hspec $ do
       searchSorted 0 (V.fromList [1,2]) `shouldBe` Nothing
 
     -- TODO: better constrain Arbitrary instances of l and i
-    describe "Properties" $ do
+    describe "Properties" $
       it "what goes in must come out" $ property $ \l i ->
-        if null l
-           then True
-           else do
-             let sorted = V.fromList $ sort (l::[Int])
-                 item = sorted V.! (i `mod` V.length sorted)
-                 found = searchSorted item sorted
-             case found of
-               Nothing  -> False
-               Just idx -> item == sorted V.! idx
+        null l || do
+          let sorted = V.fromList $ sort (l::[Int])
+              item = sorted V.! (i `mod` V.length sorted)
+              found = searchSorted item sorted
+          case found of
+            Nothing  -> False
+            Just idx -> item == sorted V.! idx
 
   describe "Binary search on rotated array" $ do
     it "Finds nothing in an empty list" $
@@ -109,18 +108,16 @@ main = hspec $ do
       let rotate i = (\(a,b) -> b V.++ a) . V.splitAt i
 
       it "what goes in must come out" $ property $ \l i rot ->
-        if null l
-           then True
-           else do
-             let sorted = V.fromList . sort $ (l::[Int])
-                 len = V.length sorted
-                 (i', rot') = (i `mod` len, (rot::Int) `mod` len)
-                 rotated = rotate rot' sorted
-                 item = rotated V.! i'
-                 found = searchRotated item rotated
-             case found of
-               Nothing  -> False
-               Just idx -> item == rotated V.! idx
+        null l || do
+          let sorted = V.fromList . sort $ (l::[Int])
+              len = V.length sorted
+              (i', rot') = (i `mod` len, (rot::Int) `mod` len)
+              rotated = rotate rot' sorted
+              item = rotated V.! i'
+              found = searchRotated item rotated
+          case found of
+            Nothing  -> False
+            Just idx -> item == rotated V.! idx
 
   describe "Finding primes" $
     it "Matches known list" $
@@ -138,3 +135,8 @@ main = hspec $ do
       map (naryRepresentation 10) [0..15] `shouldBe` [
         [0],[1],[2],[3],[4],[5],[6],[7],[8],[9],[1,0],
         [1,1],[1,2],[1,3],[1,4],[1,5]]
+
+  describe "Parsing a positive int" $
+    it "Undoes the decimal representation function" $ property $ \i ->
+      parseInt (map intToDigit $ naryRepresentation 10 (abs i))
+        `shouldBe` abs i
