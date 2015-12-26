@@ -1,4 +1,4 @@
-module Answers where
+module Inter.Quora.General where
 
 import Types
 

@@ -15,7 +15,7 @@ cabal-version:       >=1.10
 
 library
   hs-source-dirs:      src
-  exposed-modules:     Answers
+  exposed-modules:     Inter.Quora.General
                      , Types
   build-depends:       base >= 4.7 && < 5
                      , containers
@@ -29,7 +29,7 @@ library
 test-suite inter-test
   type:                exitcode-stdio-1.0
   hs-source-dirs:      test
-  main-is:             Spec.hs
+  main-is:             Quora.hs
   build-depends:       base
                      , containers
                      , unordered-containers

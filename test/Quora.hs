@@ -7,7 +7,7 @@ import qualified Data.Vector as V
 import Data.Char (intToDigit)
 import Data.List (sort)
 
-import Answers
+import Inter.Quora.General
 import Types
 
 main :: IO ()
