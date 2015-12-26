@@ -145,3 +145,7 @@ main = hspec $ do
       let tolerance = 0.0001
           r = findRoot tolerance (abs n) in
       abs (r*r - abs n) `shouldSatisfy` (< tolerance)
+
+  describe "Exponentiation with nonnegative power" $
+    it "Agrees with standard library" $ property $ \base n ->
+      raiseTo base (abs n) `shouldBe` base ^ (abs n)

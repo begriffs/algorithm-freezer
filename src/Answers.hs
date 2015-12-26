@@ -298,3 +298,24 @@ findRoot tolerance n
       then mid
       else
         if mid*mid < n then rootIn mid hi else rootIn lo mid
+
+{- | Exponentiation defined in terms of multiplication
+
+Clarifying questions:
+  - Nonnegative exponents only?
+
+Strategy:
+  - Multiplication is associative so x^(2i+r) = ((x^i)^2)(x^r)
+    which allows us to divide and conquer: i is half the original
+    exponent and r is at most one.
+
+Naive O(n) way:
+  \base, n -> product . take n $ repeat base
+-}
+raiseTo :: Integer -> Integer -> Integer
+raiseTo _    0 = 1
+raiseTo base 1 = base
+raiseTo base n =
+  let halfsies = raiseTo base (n `quot` 2)
+      extra    = raiseTo base (n `rem` 2) in
+  halfsies * halfsies * extra
