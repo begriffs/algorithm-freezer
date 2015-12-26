@@ -319,3 +319,31 @@ raiseTo base n =
   let halfsies = raiseTo base (n `quot` 2)
       extra    = raiseTo base (n `rem` 2) in
   halfsies * halfsies * extra
+
+{- | Multiplication defined in terms of addition
+
+Clarifying questions:
+  - The two arguments are natural numbers? Integers? Rationals? Reals? Complex?
+  - Assuming integers
+
+Naive way to multiply positives:
+  sum . take b $ repeat a
+
+Complexity:
+  log (min a b)
+-}
+multiplyBy :: Integer -> Integer -> Integer
+multiplyBy a b =
+  let {a' = abs a; b' = abs b} in
+  (if xorNegative a b then negate else id)
+    (multPos (max a' b') (min a' b'))
+ where
+  xorNegative m n =
+    let { posm = m < 0; posn = n < 0 } in
+    (posm || posn) && not (posm && posn)
+  multPos _ 0 = 0
+  multPos m 1 = m
+  multPos m n =
+    let halfsies = multPos m (n `quot` 2)
+        extra    = multPos m (n `rem` 2) in
+    halfsies + halfsies + extra

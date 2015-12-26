@@ -149,3 +149,7 @@ main = hspec $ do
   describe "Exponentiation with nonnegative power" $
     it "Agrees with standard library" $ property $ \base n ->
       raiseTo base (abs n) `shouldBe` base ^ (abs n)
+
+  describe "Multiplication" $
+    it "Agrees with standard library" $ property $ \a b ->
+      multiplyBy a b `shouldBe` a * b
