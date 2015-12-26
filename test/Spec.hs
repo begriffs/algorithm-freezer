@@ -140,3 +140,9 @@ main = hspec $ do
     it "Undoes the decimal representation function" $ property $ \i ->
       parseInt (map intToDigit $ naryRepresentation 10 (abs i))
         `shouldBe` abs i
+
+  describe "Finding square roots" $
+    it "Stays within specified tolerance" $ property $ \n ->
+      let tolerance = 0.0001
+          r = findRoot tolerance (abs n) in
+      abs (r*r - abs n) `shouldSatisfy` (< tolerance)

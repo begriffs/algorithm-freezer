@@ -275,3 +275,26 @@ parseInt str =
   sum . zipWith (*) [10^i | i::Int <- [0..]]
     . reverse
     $ map digitToInt str
+
+{- | Estimate the square root of a number to a tolerance
+
+Strategy
+  - Search for sqrt in a region, dividing region size in half each time
+
+Complexity:
+  - This searches through up to (n / sqrt tolerance) intervals
+    to find the value. Because it eliminates half the search
+    space each time I think it runs in log (n / sqrt tolerance)
+-}
+findRoot :: Double -> Double -> Double
+findRoot tolerance n
+  | n < 0 = error "Negative numbers outside of domain"
+  | n < 1 = rootIn n 1 -- the root will be bigger than n
+  | otherwise = rootIn 0 n
+ where
+  rootIn lo hi =
+    let mid = (lo + hi) / 2 in
+    if abs (n - mid*mid) < tolerance
+      then mid
+      else
+        if mid*mid < n then rootIn mid hi else rootIn lo mid
