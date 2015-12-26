@@ -3,7 +3,6 @@ module Answers where
 import Types
 
 import Data.Char (digitToInt)
-import Data.Maybe
 import qualified Data.Set as S
 import qualified Data.Map as M
 import qualified Data.HashSet as H
@@ -157,7 +156,7 @@ searchSorted a ar =
     | lo > hi = Nothing
     | a == guess = Just mid
     | a > guess = inRange (mid+1) hi
-    | a < guess = inRange lo (mid-1)
+    | otherwise = inRange lo (mid-1)
     where
       mid = (hi+lo) `div` 2
       guess = ar V.! mid
@@ -219,6 +218,7 @@ Complexity
 primesTo :: Int -> [Int]
 primesTo n = removeHeadMultiples [2..n]
  where
+  removeHeadMultiples [] = []
   removeHeadMultiples same@(p:xs)
     | p*p > n   = same -- short circuit factors greater than sqrt(n)
     | otherwise = p : removeHeadMultiples [x | x <- xs, x `rem` p > 0]
@@ -234,6 +234,7 @@ although not guaranteed to produce exactly n results.
 primes :: [Int]
 primes = removeHeadMultiples [2..]
  where
+  removeHeadMultiples [] = []
   removeHeadMultiples (p:xs) = p : removeHeadMultiples [x | x <- xs, x `rem` p > 0]
 
 {- | Find n-ary representation of an int.
@@ -247,8 +248,8 @@ Complexity:
   = 2 log n ~ log n
 -}
 naryRepresentation :: Int -> Int -> [Int]
-naryRepresentation base i =
-  reverse $ decompose i
+naryRepresentation base n =
+  reverse $ decompose n
  where
   decompose i
     | i < 0 = error "Cannot handle negative numbers"
@@ -271,6 +272,6 @@ Complexity:
 parseInt :: String -> Int
 parseInt ('-':str) = -1 * parseInt str
 parseInt str =
-  sum . zipWith (*) [10^i | i <- [0..]]
+  sum . zipWith (*) [10^i | i::Int <- [0..]]
     . reverse
     $ map digitToInt str
