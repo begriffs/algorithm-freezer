@@ -2,12 +2,16 @@ module Inter.Quora.General where
 
 import Types
 
+import Control.Monad (replicateM)
 import Data.Char (digitToInt)
+
 import qualified Data.Set as S
 import qualified Data.Map as M
 import qualified Data.HashSet as H
 import qualified Data.Algorithms.KMP as KMP
 import qualified Data.Vector as V
+
+import Data.Random
 
 {- | Find most frequently occuring elts in list
 
@@ -347,3 +351,17 @@ multiplyBy a b =
     let halfsies = multPos m (n `quot` 2)
         extra    = multPos m (n `rem` 2) in
     halfsies + halfsies + extra
+
+{- | Generate random numbers from 0-6 given generator for 0-4
+
+Strategy:
+  - over-role the d5 to generate more than 7 possibilities
+  - map certain ranges of those possibilities to the desired 0-6
+  - consider the remaining possibilities as a misroll and try again
+  - overwhelmingly likely to terminate
+-}
+d7 :: RVar Int
+d7 = do
+  [x, y] <- replicateM 2 $ uniform 0 (4::Int)
+  let d9 = (5*x + y) `quot` 3 -- 25 `quod` 3 == 8 > 6
+  if d9 > 6 then d7 else return d9

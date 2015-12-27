@@ -4,8 +4,11 @@ import Test.QuickCheck
 import qualified Data.Set as S
 import qualified Data.HashSet as H
 import qualified Data.Vector as V
+import Control.Monad (replicateM)
 import Data.Char (intToDigit)
-import Data.List (sort)
+import Data.List (sort, group)
+import Data.Random (runRVar, StdRandom(..))
+import Statistics.Test.ChiSquared
 
 import Inter.Quora.General
 import Types
@@ -153,3 +156,13 @@ main = hspec $ do
   describe "Multiplication" $
     it "Agrees with standard library" $ property $ \a b ->
       multiplyBy a b `shouldBe` a * b
+
+  describe "Generate uniform d7 random numbers from d5" $
+    it "D7 has a uniform distribution indeed (p=0.05)" $ do
+      let trials = 70000
+      rolls <- runRVar (replicateM trials d7) StdRandom
+      let hist = V.fromList $ zip
+            [ length l | l <- group (sort rolls) ]
+            (repeat 10000)
+      -- the null hypothesis (normal dist) remains un-disproven
+      chi2test 0.05 0 hist `shouldBe` NotSignificant
