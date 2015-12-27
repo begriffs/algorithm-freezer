@@ -7,6 +7,7 @@ import qualified Data.Vector as V
 import Control.Monad (replicateM)
 import Data.Char (intToDigit)
 import Data.List (sort, group)
+import Data.Matrix
 import Data.Random (runRVar, StdRandom(..))
 import Statistics.Test.ChiSquared
 
@@ -166,3 +167,16 @@ main = hspec $ do
             (repeat 10000)
       -- the null hypothesis (normal dist) remains un-disproven
       chi2test 0.05 0 hist `shouldBe` NotSignificant
+
+  describe "Finding islands in a matrix" $ do
+    it "Finds none in the ocean" $
+      countIslands (matrix 4 4 $ const False) `shouldBe` 0
+    it "Finds one on a continent" $
+      countIslands (matrix 4 4 $ const True) `shouldBe` 1
+    it "Finds one in a diagonal matrix" $
+      countIslands (matrix 4 4 $ \(i,j) -> i==j) `shouldBe` 1
+    it "Finds two a matrix with two strips of land" $
+      countIslands (matrix 4 4 $ \(i,_) -> elem i [1,3]) `shouldBe` 2
+    it "Finds four islands in the corners" $
+      countIslands (matrix 3 3 $ \(i,j) -> i `elem` [1,3] && j `elem` [1,3])
+        `shouldBe` 4

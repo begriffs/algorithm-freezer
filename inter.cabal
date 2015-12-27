@@ -36,6 +36,7 @@ test-suite inter-test
   main-is:             Quora.hs
   build-depends:       base
                      , containers
+                     , matrix
                      , random-fu
                      , statistics
                      , unordered-containers

@@ -368,11 +368,28 @@ d7 = do
   let d9 = (5*x + y) `quot` 3 -- 25 `quod` 3 == 8 > 6
   if d9 > 6 then d7 else return d9
 
-data CellLabel = CellLabel {
-    clPos  :: (Int,Int)  -- The cell's position in its matrix
-  , clLand :: Bool       -- True for land, False for sea
-  } deriving (Eq)
+{- | Given a matrix of booleans count the number of islands of Trues
 
+Clarifying questions
+  - Do diagonal neighbors count for connectedness? (Assuming yes)
+
+Strategy
+  - True cells in the matrix are land, False are sea
+  - This is a disguised instance of finding the connected components
+    in a graph
+  - Transform the matrix into a proper graph of land nodes
+  - For each land node add connections for each of its land
+    neighbors in the matrix
+  - (This will lead to double marking the connections forward and
+     backward but does not change the time complexity)
+  - Then find and count the connected components
+
+Complexity for m x n matrix
+  - nodes: mn
+  - neighbors: 1
+  - components (via DFS): linear in number of land nodes
+  = mn
+-}
 countIslands :: Matrix Bool -> Int
 countIslands = length . components . landGraph
  where
@@ -399,3 +416,8 @@ countIslands = length . components . landGraph
 
   mkEdge :: LNode CellLabel -> LNode CellLabel -> UEdge
   mkEdge n1 n2 = (fst n1, fst n2, ())
+
+data CellLabel = CellLabel {
+    clPos  :: (Int,Int)  -- The cell's position in its matrix
+  , clLand :: Bool       -- True for land, False for sea
+  } deriving (Eq)
