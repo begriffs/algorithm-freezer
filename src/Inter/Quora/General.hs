@@ -4,11 +4,14 @@ import Types
 
 import Control.Monad (replicateM)
 import Data.Char (digitToInt)
+import Data.Graph.Inductive hiding (edges, nodes, neighbors, mkNode, mkEdge)
+import Data.Maybe (catMaybes)
+import Data.Matrix
 
-import qualified Data.Set as S
-import qualified Data.Map as M
-import qualified Data.HashSet as H
 import qualified Data.Algorithms.KMP as KMP
+import qualified Data.HashSet as H
+import qualified Data.Map as M
+import qualified Data.Set as S
 import qualified Data.Vector as V
 
 import Data.Random
@@ -342,9 +345,8 @@ multiplyBy a b =
   (if xorNegative a b then negate else id)
     (multPos (max a' b') (min a' b'))
  where
-  xorNegative m n =
-    let { posm = m < 0; posn = n < 0 } in
-    (posm || posn) && not (posm && posn)
+  xorNegative m n = (negm || negn) && not (negm && negn)
+    where { negm = m < 0; negn = n < 0 }
   multPos _ 0 = 0
   multPos m 1 = m
   multPos m n =
@@ -355,13 +357,45 @@ multiplyBy a b =
 {- | Generate random numbers from 0-6 given generator for 0-4
 
 Strategy:
-  - over-role the d5 to generate more than 7 possibilities
+  - over-roll the d5 to generate more than 7 possibilities
   - map certain ranges of those possibilities to the desired 0-6
   - consider the remaining possibilities as a misroll and try again
-  - overwhelmingly likely to terminate
+  - it's a "Las Vegas" algorithm and overwhelmingly likely to terminate
 -}
 d7 :: RVar Int
 d7 = do
   [x, y] <- replicateM 2 $ uniform 0 (4::Int)
   let d9 = (5*x + y) `quot` 3 -- 25 `quod` 3 == 8 > 6
   if d9 > 6 then d7 else return d9
+
+data CellLabel = CellLabel {
+    clPos  :: (Int,Int)  -- The cell's position in its matrix
+  , clLand :: Bool       -- True for land, False for sea
+  } deriving (Eq)
+
+countIslands :: Matrix Bool -> Int
+countIslands = length . components . landGraph
+ where
+  landGraph :: Matrix Bool -> Gr CellLabel ()
+  landGraph m = mkGraph land edges
+   where
+    land = landOnly $ nodes m
+    edges = [mkEdge n1 n2 |
+             n1 <- land, n2 <- landOnly $ neighbors n1 m]
+
+  landOnly :: [LNode CellLabel] -> [LNode CellLabel]
+  landOnly = filter (clLand . snd)
+
+  nodes :: Matrix Bool -> [LNode CellLabel]
+  nodes m = catMaybes
+    [ mkNode (i,j) m | i <- [1..nrows m], j <- [1..ncols m] ]
+
+  neighbors :: LNode CellLabel -> Matrix Bool -> [LNode CellLabel]
+  neighbors (_, CellLabel (i,j) _) m = catMaybes [ mkNode (a,b) m |
+    a <- [i-1,i,i+1], b <- [j-1,j,j+1], not (a==i && b==j) ]
+
+  mkNode :: (Int,Int) -> Matrix Bool -> Maybe (LNode CellLabel)
+  mkNode (i,j) m = (i * ncols m + j,) <$> (CellLabel (i,j) <$> safeGet i j m)
+
+  mkEdge :: LNode CellLabel -> LNode CellLabel -> UEdge
+  mkEdge n1 n2 = (fst n1, fst n2, ())
