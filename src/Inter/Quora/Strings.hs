@@ -40,13 +40,25 @@ firstUniqueChar s =
   singles = M.filter ((==1) . ogCount) $ occurrenceGroups s
   occursBefore a b = (ogFirst $ snd a) `compare` (ogFirst $ snd b)
 
--- | Reverse a vector recursively
+{- | Reverse a vector recursively
+
+Complexity: n
+-}
 revRecursive :: V.Vector a -> V.Vector a
 revRecursive v
   | V.null v  = v
   | otherwise = V.snoc (revRecursive $ V.tail v) (V.head v)
 
--- | Iteratively reverse a mutable vector
+{- | Iteratively reverse a mutable vector
+
+* Strategy
+
+    * Thaw the input into the ST monad
+    * Pivoting around the middle, swap ends working inward
+    * Freeze and return (shh, you didn't see any mutation!)
+
+* Complexity: n
+-}
 revIterative :: V.Vector a -> V.Vector a
 revIterative v
   | V.null v  = v
