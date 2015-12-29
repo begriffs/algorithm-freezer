@@ -1,6 +1,11 @@
 module Inter.Quora.Strings where
 
 import qualified Data.HashMap.Lazy as M
+import qualified Data.Vector as V
+import qualified Data.Vector.Mutable as MV
+
+import Control.Monad.ST
+import Data.Foldable (forM_)
 import Data.List (minimumBy)
 
 import Inter.Quora.General (occurrenceGroups)
@@ -34,3 +39,21 @@ firstUniqueChar s =
  where
   singles = M.filter ((==1) . ogCount) $ occurrenceGroups s
   occursBefore a b = (ogFirst $ snd a) `compare` (ogFirst $ snd b)
+
+-- | Reverse a vector recursively
+revRecursive :: V.Vector a -> V.Vector a
+revRecursive v
+  | V.null v  = v
+  | otherwise = V.snoc (revRecursive $ V.tail v) (V.head v)
+
+-- | Iteratively reverse a mutable vector
+revIterative :: V.Vector a -> V.Vector a
+revIterative v
+  | V.null v  = v
+  | otherwise = runST $ do
+    mv <- V.thaw v
+    forM_ [0..half-1] $ \i -> MV.swap mv i ((n-i)-1)
+    V.freeze mv
+ where
+  n = V.length v
+  half = n `div` 2
