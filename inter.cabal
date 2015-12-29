@@ -16,6 +16,7 @@ cabal-version:       >=1.10
 library
   hs-source-dirs:      src
   exposed-modules:     Inter.Quora.General
+                     , Inter.Quora.Strings
                      , Types
   build-depends:       base >= 4.7 && < 5
                      , containers
@@ -33,7 +34,7 @@ library
 test-suite inter-test
   type:                exitcode-stdio-1.0
   hs-source-dirs:      test
-  main-is:             Quora.hs
+  main-is:             Spec.hs
   build-depends:       base
                      , containers
                      , matrix
@@ -42,6 +43,7 @@ test-suite inter-test
                      , unordered-containers
                      , vector
                      , hspec
+                     , hspec-discover
                      , inter
                      , QuickCheck
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N -Wall

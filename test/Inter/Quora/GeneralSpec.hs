@@ -1,3 +1,5 @@
+module Inter.Quora.GeneralSpec where
+
 import Test.Hspec
 import Test.QuickCheck
 
@@ -14,8 +16,8 @@ import Statistics.Test.ChiSquared
 import Inter.Quora.General
 import Types
 
-main :: IO ()
-main = hspec $ do
+spec :: Spec
+spec = do
   describe "Most frequent item in array" $ do
     it "There is none in empty array" $
       mostFreq ([]::[Int]) `shouldBe` S.empty
