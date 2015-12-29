@@ -8,20 +8,24 @@ import Inter.Quora.General (occurrenceGroups)
 
 {- | Find the first non-repeated character
 
-Strategy
-  - Make a set of elements which occur only once
-  - Scan the string testing each char for membership in the set
+* Strategy
 
-Complexity
-  - find: n
-  - singles
-    - fromList: n log n
-    - keys: n
-    - filter: n
-    - occurrences: n log n
-    = 2 (n + n log n) ~ n log n
-  - member: log n
-  = n + n log n + log n ~ n log n
+    * Make a set of elements which occur only once
+    * Scan the string testing each char for membership in the set
+
+* Complexity
+
+    * find: n
+    * singles
+
+        * fromList: n log n
+        * keys: n
+        * filter: n
+        * occurrences: n log n
+        * = 2 (n + n log n) ~ n log n
+
+    * member: log n
+    * = n + n log n + log n ~ n log n
 -}
 firstUniqueChar :: String -> Maybe Char
 firstUniqueChar s = find (`Set.member` singles) s
