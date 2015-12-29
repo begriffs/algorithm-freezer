@@ -30,7 +30,8 @@ arsenal to demolish problems.
 * [Quora](https://www.reddit.com/r/cscareerquestions/comments/20ahfq/heres_a_pretty_big_list_of_programming_interview/)
   * [General](src/Inter/Quora/General.hs) |
     [Tests](test/Inter/Quora/GeneralSpec.hs)
-  * [Strings](src/Inter/Quora/Strings.hs)
+  * [Strings](src/Inter/Quora/Strings.hs) |
+    [Tests](test/Inter/Quora/StringsSpec.hs)
   * Trees
   * Stacks, Queues, and Heaps
   * Linked Lists
