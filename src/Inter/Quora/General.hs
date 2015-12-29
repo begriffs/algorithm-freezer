@@ -5,13 +5,13 @@ import Types
 import Control.Monad (replicateM)
 import Data.Char (digitToInt)
 import Data.Graph.Inductive hiding (edges, nodes, neighbors, mkNode, mkEdge)
+import Data.Hashable
 import Data.Maybe (catMaybes)
 import Data.Matrix
 
 import qualified Data.Algorithms.KMP as KMP
-import qualified Data.HashSet as H
-import qualified Data.Map as M
-import qualified Data.Set as S
+import qualified Data.HashSet as S
+import qualified Data.HashMap.Lazy as M
 import qualified Data.Vector as V
 
 import Data.Random
@@ -38,15 +38,16 @@ the item(s) with maximal frequency.
     * occurrenceGroups: n log n
     * maxFrequency: n
     * filter: n
-    * keysSet: n
-    * = n log n + 3n ~ n log n
+    * keys: n
+    * fromList: O(n*min(W, n)) ~ n
+    * = n log n + 4n ~ n log n
 -}
-mostFreq :: Ord a => [a] -> S.Set a
+mostFreq :: (Eq a, Hashable a) => [a] -> S.HashSet a
 mostFreq xs =
   let grouped = occurrenceGroups xs
-      maxFrequency = M.foldr max 0 grouped in
-  M.keysSet $
-    M.filter (==maxFrequency) grouped
+      maxFrequency = M.foldr (max . ogCount) 0 grouped in
+  S.fromList . M.keys $
+    M.filter ((==maxFrequency) . ogCount) grouped
 
 {- | Helper for array frequency questions
 
@@ -54,9 +55,11 @@ mostFreq xs =
 
     * insertWith: log n
 -}
-occurrenceGroups :: Ord a => [a] -> M.Map a Int
-occurrenceGroups = foldr
-  (\k m -> M.insertWith (+) k 1 m) M.empty
+occurrenceGroups :: (Eq a, Hashable a) => [a] -> M.HashMap a OccurrenceGroup
+occurrenceGroups = foldr (\(pos,k) m ->
+    M.insertWith (\og _ -> og { ogCount = ogCount og + 1 })
+      k (OccurrenceGroup pos 1) m
+  ) M.empty . zip [0..]
 
 {- | Find pairs of integers in a list which add to n.
 
@@ -77,19 +80,19 @@ occurrenceGroups = foldr
 
 * Time complexity: for arbitrary list length but bounded W
 
-    * H.fromList: n*min(10, W) ~ n (for small W)
-    * H.member: min(10, W) ~ 1
-    * H.insert: min(10, W) ~ 1
+    * M.fromList: n*min(10, W) ~ n
+    * M.member: min(10, W) ~ 1
+    * M.insert: min(10, W) ~ 1
     * = n + n*(1 + 1 + 1) ~ n
 -}
-adders :: Int -> [Int] -> H.HashSet (UnorderedPair Int)
+adders :: Int -> [Int] -> S.HashSet (UnorderedPair Int)
 adders n is = foldr
   (\i result ->
-    if H.member (n-i) values
-       then H.insert (makeUnordered (i, n-i)) result
+    if S.member (n-i) values
+       then S.insert (makeUnordered (i, n-i)) result
        else result
-  ) H.empty values
- where values = H.fromList is
+  ) S.empty values
+ where values = S.fromList is
 
 {- | Are two lists rotations of one another?
 
@@ -140,8 +143,8 @@ the item(s) which occur exactly once.
     * keysSet: n
     * = n log n + 2n ~ n log n
 -}
-loners :: Ord a => [a] -> S.Set a
-loners = M.keysSet . M.filter (==1) . occurrenceGroups
+loners :: (Eq a, Hashable a) => [a] -> S.HashSet a
+loners = S.fromList . M.keys . M.filter ((==1) . ogCount) . occurrenceGroups
 
 {- | Find the common elements of two lists
 
@@ -156,7 +159,7 @@ loners = M.keysSet . M.filter (==1) . occurrenceGroups
     * S.intersection: m+n
     * = n log n + m + n + m log m ~ n log n (for n similar to m)
 -}
-commonElts :: Ord a => [a] -> [a] -> S.Set a
+commonElts :: (Eq a, Hashable a) => [a] -> [a] -> S.HashSet a
 commonElts a b = S.fromList a `S.intersection` S.fromList b
 
 {- | Binary search in a sorted array

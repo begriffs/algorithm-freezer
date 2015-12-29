@@ -21,6 +21,7 @@ library
   build-depends:       base >= 4.7 && < 5
                      , containers
                      , fgl
+                     , hashable
                      , matrix
                      , random-fu
                      , unordered-containers

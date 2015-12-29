@@ -3,8 +3,7 @@ module Inter.Quora.GeneralSpec where
 import Test.Hspec
 import Test.QuickCheck
 
-import qualified Data.Set as S
-import qualified Data.HashSet as H
+import qualified Data.HashSet as S
 import qualified Data.Vector as V
 import Control.Monad (replicateM)
 import Data.Char (intToDigit)
@@ -33,13 +32,13 @@ spec = do
   describe "Pairs adding to ten" $ do
     let tenners = adders 10
     it "Lists no pairs for an empty list" $
-      tenners [] `shouldBe` H.empty
+      tenners [] `shouldBe` S.empty
     it "Lists no pairs when there are none" $
-      tenners [0,1] `shouldBe` H.empty
+      tenners [0,1] `shouldBe` S.empty
     it "Finds a pair" $
-      tenners [1,9] `shouldBe` H.singleton (makeUnordered (1, 9))
+      tenners [1,9] `shouldBe` S.singleton (makeUnordered (1, 9))
     it "Finds all pairs" $
-      tenners [0,1,2,3,4,5,6,7,8,9] `shouldBe` H.fromList
+      tenners [0,1,2,3,4,5,6,7,8,9] `shouldBe` S.fromList
         (map makeUnordered [(1,9), (2,8), (3,7), (4,6), (5,5)])
 
   describe "Detecting when one list is a rotation of another" $ do
