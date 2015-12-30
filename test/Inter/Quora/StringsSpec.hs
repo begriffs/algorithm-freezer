@@ -1,8 +1,10 @@
 module Inter.Quora.StringsSpec where
 
 import Test.Hspec
-import Test.QuickCheck
+import Test.QuickCheck hiding (shuffle)
 import qualified Data.Vector as V
+import Data.Random (runRVar, StdRandom(..))
+import Data.Random.List (shuffle)
 
 import Inter.Quora.Strings
 
@@ -25,3 +27,16 @@ spec = do
     it "doing so with mutation behaves the same as std lib" $ property $ \s ->
       let v = V.fromList (s::String) in
       revIterative (v::V.Vector Char) `shouldBe` V.reverse v
+
+  describe "Detecting anagrams" $ do
+    it "works for a shuffled vector" $ property $ \s -> do
+      ana <- runRVar (shuffle (s::String)) StdRandom
+      anagrams s ana `shouldBe` True
+
+    it "identifies a non-anagram" $
+      anagrams "abb" "a" `shouldBe` False
+
+  describe "Detecting palindromes" $ do
+    it "works on crazy things" $ property $ \s ->
+      let v = V.fromList (s::String) in
+      palindrome v `shouldBe` (v == V.reverse v)

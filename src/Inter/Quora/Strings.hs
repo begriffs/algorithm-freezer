@@ -6,6 +6,7 @@ import qualified Data.Vector.Mutable as MV
 
 import Control.Monad.ST
 import Data.Foldable (forM_)
+import Data.Hashable
 import Data.List (minimumBy)
 
 import Inter.Quora.General (occurrenceGroups)
@@ -60,12 +61,55 @@ revRecursive v
 * Complexity: n
 -}
 revIterative :: V.Vector a -> V.Vector a
-revIterative v
-  | V.null v  = v
-  | otherwise = runST $ do
-    mv <- V.thaw v
-    forM_ [0..half-1] $ \i -> MV.swap mv i ((n-i)-1)
-    V.freeze mv
+revIterative v = runST $ do
+  mv <- V.thaw v
+  forM_ [0..half-1] $ \i -> MV.swap mv i ((n-i)-1)
+  V.freeze mv
+ where
+  n = V.length v
+  half = n `div` 2
+
+{- | Determine if two vectors are anagrams
+
+* Naive n log n solution (requires Ord a)
+
+    @
+    \a b -> (V.sort a) == (V.sort b)
+    @
+
+* Strategy
+
+    * Two strings are anagrams iff the counts of characters
+      occurring in each matches those of the other
+    * Build an efficient hash-based occurrence group count of each
+    * Then compare
+
+* Complexity: 3n ~ n
+
+    * occurrenceGroups: n
+    * M.map: n
+    * (==) on hash maps: n
+-}
+anagrams :: (Eq a, Hashable a) => [a] -> [a] -> Bool
+anagrams a b =
+  M.map ogCount (occurrenceGroups a) ==
+    M.map ogCount (occurrenceGroups b)
+
+{- | Determine if a vector is a palindrome
+
+* Naive three pass approach
+
+    @
+    \v -> v == reverse v
+    @
+
+* Strategy
+
+    * It's the same complexity class really, but we can scan
+      inward from both sides of the vector and check for equality
+-}
+palindrome :: Eq a => V.Vector a -> Bool
+palindrome v = all (\i -> v V.! i == v V.! ((n-i)-1)) [0..half-1]
  where
   n = V.length v
   half = n `div` 2

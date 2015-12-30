@@ -12,4 +12,4 @@ makeUnordered (i,j) = (min i j, max i j)
 data OccurrenceGroup = OccurrenceGroup {
     ogFirst :: Int -- first position seen
   , ogCount :: Int -- how many seen total
-  }
+  } deriving (Eq)
