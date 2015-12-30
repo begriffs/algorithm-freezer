@@ -35,12 +35,12 @@ the item(s) with maximal frequency.
 
 * Time complexity:
 
-    * occurrenceGroups: n log n
+    * occurrenceGroups: n
     * maxFrequency: n
     * filter: n
     * keys: n
-    * fromList: O(n*min(W, n)) ~ n
-    * = n log n + 4n ~ n log n
+    * fromList: n*min(W, n) ~ n
+    * = 5n ~ n
 -}
 mostFreq :: (Eq a, Hashable a) => [a] -> S.HashSet a
 mostFreq xs =
@@ -51,9 +51,10 @@ mostFreq xs =
 
 {- | Helper for array frequency questions
 
-* Complexity: n log n
+* Complexity: n for small alphabets
+  (otherwise average time is n log n)
 
-    * insertWith: log n
+    * insertWith: 1 (average of log n with big alphabets)
 -}
 occurrenceGroups :: (Eq a, Hashable a) => [a] -> M.HashMap a OccurrenceGroup
 occurrenceGroups = foldr (\(pos,k) m ->
@@ -137,11 +138,11 @@ the item(s) which occur exactly once.
 
 * Complexity
 
-    * occurrenceGroups: n log n
+    * occurrenceGroups: n
     * maxFrequency: n
     * filter: n
     * keysSet: n
-    * = n log n + 2n ~ n log n
+    * = 3n ~ n
 -}
 loners :: (Eq a, Hashable a) => [a] -> S.HashSet a
 loners = S.fromList . M.keys . M.filter ((==1) . ogCount) . occurrenceGroups
@@ -155,9 +156,9 @@ loners = S.fromList . M.keys . M.filter ((==1) . ogCount) . occurrenceGroups
 
 * Complexity
 
-    * S.fromList: n log n
+    * S.fromList: n*min(W, n) ~ n
     * S.intersection: m+n
-    * = n log n + m + n + m log m ~ n log n (for n similar to m)
+    * = n + m + n + m ~ m + n
 -}
 commonElts :: (Eq a, Hashable a) => [a] -> [a] -> S.HashSet a
 commonElts a b = S.fromList a `S.intersection` S.fromList b
